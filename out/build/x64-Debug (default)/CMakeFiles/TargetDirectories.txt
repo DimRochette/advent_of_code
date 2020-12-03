@@ -1,8 +1,0 @@
-C:/dev/advent/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
-C:/dev/advent/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
-C:/dev/advent/out/build/x64-Debug (default)/day02/CMakeFiles/day02.dir
-C:/dev/advent/out/build/x64-Debug (default)/day02/CMakeFiles/edit_cache.dir
-C:/dev/advent/out/build/x64-Debug (default)/day02/CMakeFiles/rebuild_cache.dir
-C:/dev/advent/out/build/x64-Debug (default)/day03/CMakeFiles/day03.dir
-C:/dev/advent/out/build/x64-Debug (default)/day03/CMakeFiles/edit_cache.dir
-C:/dev/advent/out/build/x64-Debug (default)/day03/CMakeFiles/rebuild_cache.dir
