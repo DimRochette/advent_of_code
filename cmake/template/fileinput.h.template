@@ -1,0 +1,10 @@
+#pragma once
+
+#include <filesystem>
+
+std::filesystem::path advent_input()
+{
+	std::filesystem::path folder(R"(@PROJECT_SOURCE_DIR@)");
+	folder/="input.txt";
+	return folder;
+}

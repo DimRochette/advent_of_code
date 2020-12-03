@@ -1,0 +1,5 @@
+macro (advent_input)		
+		set (generated_header "${CMAKE_BINARY_DIR}/header/${PROJECT_NAME}")
+		configure_file("${CMAKE_SOURCE_DIR}/cmake/template/fileinput.h.template" "${generated_header}/fileinput.h" @ONLY)		
+		target_include_directories(${PROJECT_NAME} PRIVATE "${generated_header}")
+endmacro()
