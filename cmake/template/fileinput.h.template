@@ -4,7 +4,7 @@
 
 std::filesystem::path advent_input()
 {
-	std::filesystem::path folder(R"(@PROJECT_SOURCE_DIR@)");
+	std::filesystem::path folder(R"(@PROJECT_SOURCE_DIR@/@subdir@)");
 	folder/="input.txt";
 	return folder;
 }
