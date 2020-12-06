@@ -85,11 +85,13 @@ void step2()
 						if ((height < 150) || (height > 193))
 							break;
 					}
-					else
+					else if (fields[3].back() == 'n')
 					{
 						if ((height < 59) || (height > 76))
 							break;
 					}
+					else
+						break;
 					if ((fields[4].front() == '#') && (fields[4].size() == 7))
 					{
 						auto digits = fields[4].substr(1);
