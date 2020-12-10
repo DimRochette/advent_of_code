@@ -14,11 +14,11 @@ struct code {
 	char code;
 	int counter;
 	bool visited = false;
-} ;
+};
 
 auto view_to_int(std::string_view field)
 {
-	int output=0;
+	int output = 0;
 	std::from_chars(field.data(), field.data() + field.size(), output);
 	return output;
 };
@@ -28,10 +28,10 @@ auto read_values()
 	std::fstream fcin(advent_input().c_str());
 	std::vector<int> input;
 	while (!fcin.eof())
-	{		
+	{
 		int val;
 		fcin >> val;
-		input.push_back(val);		
+		input.push_back(val);
 	}
 	std::sort(input.begin(), input.end());
 	return input;
@@ -39,22 +39,22 @@ auto read_values()
 
 void step1()
 {
-	auto input= read_values();
+	auto input = read_values();
 	std::adjacent_difference(input.begin(), input.end(), input.begin());
 	std::sort(input.begin(), input.end());
 	// always 3 higher
 	input.push_back(3);
 	auto p = std::lower_bound(input.begin(), input.end(), 3);
 	auto smalldiff = std::distance(input.begin(), p);
-	auto bigdiff = std::distance(p,input.end());
-	std::cout << "step 1:" << smalldiff*bigdiff << std::endl;
+	auto bigdiff = std::distance(p, input.end());
+	std::cout << "step 1:" << smalldiff * bigdiff << std::endl;
 }
 
 
 // convert a line on numbers
-// ab = ab,b = 11,01
-// abc = abc,ac,bc,c = 111,101,011,001
-// abcd = abcd,abd,acd, bcd, abd, bd,cd,d = 1111, 1101, 1011, 1001, 0111, 0101, 0011
+// ab   = 11, 01
+// abc  = 111, 101, 011, 001
+// abcd = 1111, 1101, 1011, 1001, 0111, 0101, 0011
 int compute_combinatory(int length)
 {
 	// the rightmost number should always be selected to be able to have next plug
@@ -70,8 +70,8 @@ int compute_combinatory(int length)
 		int consecutive = 0;
 		for (int b = 0; ;)
 		{
-			auto mask = (i & (1 <<b));
-			if (0==mask)
+			auto mask = (i & (1 << b));
+			if (0 == mask)
 			{
 				consecutive++;
 				if (consecutive > 2) break;
@@ -82,7 +82,7 @@ int compute_combinatory(int length)
 			if (b == length)
 			{
 				count++;
-				break; 
+				break;
 			}
 		}
 	}
@@ -91,21 +91,21 @@ int compute_combinatory(int length)
 
 void step2()
 {
-	auto input = read_values();	
+	auto input = read_values();
 	std::adjacent_difference(input.begin(), input.end(), input.begin());
 	// always 3 higher
-	input.push_back(3);	
-	
+	input.push_back(3);
+
 	// search number of consecutive 1
 	long long permut = 1;
 	int prev = 0;
-	for (auto elem :input)
+	for (auto elem : input)
 	{
-		if (elem == 3) 
+		if (elem == 3)
 		{
 			if (prev)
-			{				
-				permut = permut* compute_combinatory(prev);
+			{
+				permut = permut * compute_combinatory(prev);
 			}
 			prev = 0;
 			continue;
@@ -116,7 +116,7 @@ void step2()
 }
 
 int main()
-{	
+{
 	step1();
 	step2();
 
