@@ -61,49 +61,43 @@ void step1()
 	std::cout << "step 1:" << besttime*bestid << std::endl;
 }
 
-int cpt = 0;
-int ok = 0;
+// check a number+position division and return how many numbers are ok with this predicate
 long long check(std::vector<std::pair<int, int>>& bustime, int currentbus, long long currenttime)
 {
-
-	if (currentbus ==3)
+	if (0 == ((currenttime + bustime[currentbus].second) % bustime[currentbus].first))
 	{
-		
-		cpt++;
-	}
-	if (0 == ((currenttime+ bustime[currentbus].second) % bustime[currentbus].first))
-	{
-		if (currentbus == -1)
-		{			
-			if ((ok==0) || (cpt - ok) != 19)
-			{
-				std::cout << "1: " << currenttime;
-				std::cout << " OK " << ok << " diff " << (cpt - ok);
-				std::cout << std::endl;
-			}
-			ok = cpt;
-		}
+		// if we are on last item return length
 		if ((currentbus + 1) == bustime.size())
-			return true;
+			return currentbus + 1;
 		auto objective = currenttime - bustime[currentbus].second + bustime[currentbus + 1].second;
 		return check(bustime, currentbus + 1, currenttime);
 	}
-	if (currentbus == 1)
-	{
-		
-	}
-	return false;
+	// failed to devide we return previous value
+	return currentbus -1;
 }
 
 long long recurse(std::vector<std::pair<int, int>>& bustime, int currentbus, long long currenttime)
 {
-	for (long long pos = currenttime;; pos += bustime[currentbus].first)
-	{		
+	long long increment= bustime[currentbus].first;
+	int bestok = 0;
+	int cpt = 0;
+	for (long long pos = currenttime;; pos += increment)
+	{
+		cpt++;
 		auto objective = pos - bustime[currentbus].second;
-		if (check(bustime,currentbus+1,objective))
+		auto lastok = check(bustime, currentbus + 1, objective); 
+		if (lastok == bustime.size())
 		{
-			return pos - bustime[currentbus].second; 
+			std::cout << "number of iteration " << cpt << std::endl;
+			return objective; // all number ok
 		}
+		else
+			if (lastok> bestok)
+			{
+				// number from 0 to bestok included are correctly aligned so we increment by their multiplication now
+				increment = std::accumulate(bustime.begin(), bustime.begin() + lastok+1, (long long)1, [](auto a, auto b) { return a * b.first; });
+				bestok = lastok;
+			}
 	}
 	return 0;
 }
@@ -118,17 +112,13 @@ void step2()
 			bustime.push_back({ businfo.second[i], i} );
 	}
 	std::sort(bustime.begin(), bustime.end(), [](auto& a, auto& b) { return a.first > b.first; });
-	auto timeref=std::accumulate(bustime.begin() + 1, bustime.end(), (long long)1, [](auto a, auto b) { return a * b.first; });
-	// better start position
-	timeref = timeref - (timeref % bustime[0].first);
-	auto timestamp = recurse(bustime, 0, timeref);
+	auto timestamp = recurse(bustime, 0, 0);
 	std::cout << "step 2:" << timestamp << std::endl;
 }
 
 int main()
 {
-	step1();
+	step1();	
 	step2();
-
 	return 0;
 }
