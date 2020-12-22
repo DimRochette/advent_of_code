@@ -6,9 +6,8 @@
 #include <numeric>
 #include <functional>
 #include <charconv>
-
+#include <map>
 #include <type_traits>
-
 #include <stack>
 #include <variant>
 #include <string>
@@ -49,23 +48,23 @@ auto read()
 		std::vector<std::string> vline;
 		std::string line;
 		std::getline(fcin, line);
-		replace_str(line, " ","");
+		replace_str(line, " ", "");
 		int prev = 0;
 		auto pos = line.find_first_of("/*-+()");
-		for (; pos!= std::string::npos; pos = line.find_first_of("/*-+()", prev))
+		for (; pos != std::string::npos; pos = line.find_first_of("/*-+()", prev))
 		{
 			if (pos != prev)
 			{
-				vline.push_back(line.substr(prev, pos-prev));
+				vline.push_back(line.substr(prev, pos - prev));
 				prev = pos;
 			}
 			else
 			{
 				vline.push_back(line.substr(prev, 1));
-				prev = pos+1;
-			}			
+				prev = pos + 1;
+			}
 		}
-		if (line[prev]!='\0')
+		if (line[prev] != '\0')
 			vline.push_back(line.substr(prev));
 		ret.push_back(vline);
 	}
@@ -73,8 +72,13 @@ auto read()
 }
 
 //will try https://en.wikipedia.org/wiki/Shunting-yard_algorithm
-auto eval(std::vector<std::string>& input)
+auto eval(std::vector<std::string>& input, bool part2 = false)
 {
+	std::map<char, char> order;
+	if (part2)
+		order = { {'+',2},{'-',2},{'*',1},{'/',1},{'(',3} };
+	else
+		order = { {'+',2},{'-',2},{'*',2},{'/',2},{'(',3} };
 	std::deque<std::variant<int, char>> output;
 	std::stack<char> operation;
 	for (auto& member : input)
@@ -105,15 +109,28 @@ auto eval(std::vector<std::string>& input)
 			operation.pop();
 			continue;
 		}
-
-		if (operation.size() && (operation.top() != '('))
+		if (operation.size())
 		{
-			output.push_back(operation.top());
-			operation.pop();
-			operation.push(candidate);
-			continue;
+			if (order[operation.top()] < order[candidate])
+			{
+				operation.push(candidate);
+				continue;
+			}
+			if (order[operation.top()] == order[candidate])
+			{
+				output.push_back(operation.top());
+				operation.pop();
+				operation.push(candidate);
+				continue;
+			}
+			if (operation.top() != '(')
+			{
+				output.push_back(operation.top());
+				operation.pop();
+				operation.push(candidate);
+				continue;
+			}
 		}
-
 		operation.push(candidate);
 	}
 	while (operation.size())
@@ -121,7 +138,7 @@ auto eval(std::vector<std::string>& input)
 		output.push_back(operation.top());
 		operation.pop();
 	}
-	
+
 	// now we unpop
 	std::stack<long long> buffer;
 	while (output.size())
@@ -134,15 +151,15 @@ auto eval(std::vector<std::string>& input)
 			buffer.pop();
 			switch (get<char>(output.front()))
 			{
-				case '+': prev = prev + buffer.top(); break;
-				case '-': prev = prev - buffer.top(); break;
-				case '*': prev = prev * buffer.top(); break;
-				case '/': prev = prev / buffer.top(); break;
-				default: break;
+			case '+': prev = prev + buffer.top(); break;
+			case '-': prev = prev - buffer.top(); break;
+			case '*': prev = prev * buffer.top(); break;
+			case '/': prev = prev / buffer.top(); break;
+			default: break;
 			}
 			buffer.pop();
 			buffer.push(prev);
-		}		
+		}
 		output.pop_front();
 	}
 	return buffer.top();
@@ -150,10 +167,10 @@ auto eval(std::vector<std::string>& input)
 
 void step1()
 {
-	long long total = 0;	
+	long long total = 0;
 	auto ret = read();
-	for (auto & elem:ret)
-		total+= eval(elem);
+	for (auto& elem : ret)
+		total += eval(elem);
 	std::cout << "step 1:" << total << std::endl;
 }
 
@@ -163,7 +180,7 @@ void step2()
 	long long total = 0;
 	auto ret = read();
 	for (auto& elem : ret)
-		total += eval(elem);
+		total += eval(elem, true);
 	std::cout << "step 2:" << total << std::endl;
 }
 
