@@ -65,6 +65,8 @@ auto read()
 				prev = pos+1;
 			}			
 		}
+		if (line[prev]!='\0')
+			vline.push_back(line.substr(prev));
 		ret.push_back(vline);
 	}
 	return ret;
@@ -73,59 +75,66 @@ auto read()
 //will try https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 auto eval(std::vector<std::string>& input)
 {
-	std::stack< std::variant<int, char>> output;
+	std::deque<std::variant<int, char>> output;
 	std::stack<char> operation;
 	for (auto& member : input)
 	{
 		char candidate = '\0';
 		if (std::isdigit(member[0]))
 		{
-			output.push(view_to_int(member));
+			output.push_back(view_to_int(member));
+			continue;
 		}
 		else
 		{
 			candidate = member[0];
 		}
 
-		if (operation.size())
+		if (candidate == '(')
 		{
-			int prev = std::get<int>(output.top());
-			output.pop();
-			int cur = std::get<int>(output.top());
-			output.pop();
-			switch (operation.top())
-			{
-			case '+': prev = prev + cur; break;
-			case '-': prev = prev - cur; break;
-			case '*': prev = prev * cur; break;
-			case '/': prev = prev / cur; break;
-			default: break;
-			}
-			output.push(prev);
-			operation.pop();
-		}
-		if (candidate!='\0')
 			operation.push(candidate);
+			continue;
+		}
+		if (candidate == ')')
+		{
+			while (operation.top() != '(')
+			{
+				output.push_back(operation.top());
+				operation.pop();
+			}
+			operation.pop();
+			continue;
+		}
+
+		if (operation.size() && (operation.top() != '('))
+		{
+			output.push_back(operation.top());
+			operation.pop();
+			operation.push(candidate);
+			continue;
+		}
+
+		operation.push(candidate);
 	}
 	while (operation.size())
 	{
-		output.push(operation.top());
+		output.push_back(operation.top());
 		operation.pop();
 	}
 	
-#if 0
-	std::stack<int> buffer;
-	while (input.size())
+	// now we unpop
+	std::stack<long long> buffer;
+	while (output.size())
 	{
-		if (std::holds_alternative<int>(input.top()))
-			buffer.push(get<int>(input.top()));
+		if (std::holds_alternative<int>(output.front()))
+			buffer.push(get<int>(output.front()));
 		else
 		{
-			int prev = buffer.top();
+			long long prev = buffer.top();
 			buffer.pop();
-			switch (get<char>(input.top()))
+			switch (get<char>(output.front()))
 			{
-			case '+': prev = prev + buffer.top(); break;
+				case '+': prev = prev + buffer.top(); break;
 				case '-': prev = prev - buffer.top(); break;
 				case '*': prev = prev * buffer.top(); break;
 				case '/': prev = prev / buffer.top(); break;
@@ -134,15 +143,14 @@ auto eval(std::vector<std::string>& input)
 			buffer.pop();
 			buffer.push(prev);
 		}		
-		input.pop();
+		output.pop_front();
 	}
-#endif
-	return 0;
+	return buffer.top();
 }
 
 void step1()
 {
-	auto total = 0;	
+	long long total = 0;	
 	auto ret = read();
 	for (auto & elem:ret)
 		total+= eval(elem);
@@ -152,7 +160,10 @@ void step1()
 
 void step2()
 {
-	auto total = 0;
+	long long total = 0;
+	auto ret = read();
+	for (auto& elem : ret)
+		total += eval(elem);
 	std::cout << "step 2:" << total << std::endl;
 }
 
