@@ -27,18 +27,6 @@ auto view_to_int(std::string_view field)
 	return output;
 };
 
-std::vector<std::string> splitstring(std::string phrase, std::string delimiter) {
-	std::vector<std::string> list;
-	std::size_t pos = 0;
-	std::string token;
-	while ((pos = phrase.find(delimiter)) != std::string::npos) {
-		list.push_back(phrase.substr(0, pos));
-		phrase.erase(0, pos + delimiter.length());
-	}
-	list.push_back(phrase);
-	return list;
-}
-
 auto read()
 {
 	std::fstream fcin(advent_input().c_str());
