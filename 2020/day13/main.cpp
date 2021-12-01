@@ -79,7 +79,7 @@ long long check(std::vector<std::pair<int, int>>& bustime, int currentbus, long 
 long long recurse(std::vector<std::pair<int, int>>& bustime, int currentbus, long long currenttime)
 {
 	long long increment= bustime[currentbus].first;
-	int bestok = 0;
+	long long bestok = 0;
 	int cpt = 0;
 	for (long long pos = currenttime;; pos += increment)
 	{

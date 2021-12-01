@@ -12,7 +12,7 @@ auto treecount(int x, int y)
 	int posx = x;
 	std::string line;
 	fcin >> line;
-	int modulo = line.length();
+	size_t modulo = line.length();
 	while (!fcin.eof())
 	{
 		for (auto extra = y - 1; extra > 0; extra--)

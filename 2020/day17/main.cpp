@@ -47,7 +47,7 @@ auto read()
 		std::string line;
 		std::getline(fcin, line);
 		std::bitset<width>& bitline = ret[decalage][decalage][decalage+y];
-		for (long long x = 0; x < line.length(); ++x)
+		for (long long x = 0; x < static_cast<long long>(line.length()); ++x)
 		{
 			if (line[x] == '#')
 				bitline[decalage +x] = 1;

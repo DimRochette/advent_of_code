@@ -37,7 +37,7 @@ auto read()
 		std::string line;
 		std::getline(fcin, line);
 		replace_str(line, " ", "");
-		int prev = 0;
+		size_t prev = 0;
 		auto pos = line.find_first_of("/*-+()");
 		for (; pos != std::string::npos; pos = line.find_first_of("/*-+()", prev))
 		{
