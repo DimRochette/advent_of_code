@@ -35,7 +35,7 @@ int score(std::tuple<char, char> hand)
 		case 2: return right + 6;
 		case 3: return right + 0;
 		}
-	}
+	} break;
 	case 2: {
 		switch (right)
 		{
@@ -43,7 +43,7 @@ int score(std::tuple<char, char> hand)
 		case 2: return right + 3;
 		case 3: return right + 6;
 		}
-	}
+	} break;
 	case 3: {
 		switch (right)
 		{
@@ -51,7 +51,7 @@ int score(std::tuple<char, char> hand)
 		case 2: return right + 0;
 		case 3: return right + 3;
 		}
-	}
+	} break;
 	}
 }
 
@@ -67,7 +67,7 @@ int goal(std::tuple<char, char> hand)
 		case 2: return 1;
 		case 3: return 2;
 		}
-	}
+	} break;
 	case 2: {
 		return left + 3;
 	}
@@ -78,7 +78,7 @@ int goal(std::tuple<char, char> hand)
 		case 2: return 3 + 6;
 		case 3: return 1 + 6;
 		}
-	}
+	}break;
 	}
 }
 
