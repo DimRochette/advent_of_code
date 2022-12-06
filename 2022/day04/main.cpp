@@ -76,7 +76,6 @@ void step2()
 {
 	auto assignement = read_input();
 	auto total = std::accumulate(assignement.begin(), assignement.end(), 0, count_overlap);
-	//543 too low
 	std::cout << "score:" << total << std::endl;
 }
 
